@@ -97,13 +97,13 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['phone']) &&
                         <div class="auth-brand">
                             <a href="index.html" class="logo logo-dark text-center">
                                 <span class="logo-lg">
-                                    <img src="../assets/images/logo-dark.png" alt="" height="22">
+                                <img src="../assets/images/logo.png" alt="" height="100">
                                 </span>
                             </a>
 
                             <a href="index.html" class="logo logo-light text-center">
                                 <span class="logo-lg">
-                                    <img src="../assets/images/logo-light.png" alt="" height="22">
+                                <img src="../assets/images/logo.png" alt="" height="100">
                                 </span>
                             </a>
                         </div>

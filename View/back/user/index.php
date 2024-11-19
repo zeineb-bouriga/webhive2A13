@@ -85,14 +85,12 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
         <div class="logo-box">
             <!-- Brand Logo Light -->
             <a href="index.html" class="logo-light">
-                <img src="../assets/images/logo-light.png" alt="logo" class="logo-lg">
-                <img src="../assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+            <img src="../assets/images/logo.png" alt="" height="75">
             </a>
 
             <!-- Brand Logo Dark -->
             <a href="index.html" class="logo-dark">
-                <img src="../assets/images/logo-dark.png" alt="dark logo" class="logo-lg">
-                <img src="../assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+            <img src="../assets/images/logo.png" alt="" height="75">
             </a>
         </div>
 
