@@ -12,8 +12,28 @@ class UserController
         $this->db = $database->connect();
     }
 
-    public function signUp(string $name, string $email, string $password, string $role, string $phone): void
+    public function findByEmail(string $email)
     {
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        try {
+            $stmt->execute();
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            die("Exception: " . $e->getMessage());
+        }
+    }
+
+    public function signUp(string $name, string $email, string $password, string $role, string $phone): bool
+    {
+        $user = $this->findByEmail($email);
+
+        if ($user) {
+            header('location: auth-register.php?error=Already Exist');
+            return false ;
+        }
+
         $sql = "INSERT INTO users (name, email, password, role, phone) VALUES (:name, :email, :password, :role, :phone)";
         $stmt = $this->db->prepare($sql);
 
@@ -27,6 +47,7 @@ class UserController
 
         try {
             $stmt->execute();
+            return true;
         } catch (Exception $e) {
             die("Exception: " . $e->getMessage());
         }
@@ -34,6 +55,7 @@ class UserController
 
     public function signIn(string $email, string $password)
     {
+
         $sql = "SELECT * FROM users WHERE email = :email AND password = :password";
         $stmt = $this->db->prepare($sql);
 
