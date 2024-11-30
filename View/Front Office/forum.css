@@ -1,0 +1,70 @@
+.topic-card {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.topic-card .card-body {
+    display: flex;
+}
+.topic-card .card-body img {
+    width: 400px; /* Fixed size for image */
+    height: auto;
+}
+.topic-card .card-body .topic-details {
+    padding: 20px;
+    flex: 1;
+}
+.topic-card .card-body .topic-details h5 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+.topic-card .card-body .topic-details p {
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+.topic-card .card-footer {
+    background-color: #f8f9fa;
+    border-top: none;
+}
+.tag {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.like-btn {
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.like-btn i {
+    color: #fff;
+}
+
+.liked {
+    background-color: #007bff;
+}
+
+/* Custom CSS */
+.like-btn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.like-btn i {
+    font-size: 20px;
+}
+
+.like-count {
+    margin-left: 10px;
+    font-size: 18px;
+    color: #333;
+}
