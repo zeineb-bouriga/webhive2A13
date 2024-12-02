@@ -97,7 +97,7 @@ class UserController
         }
     }
 
-    public function update(int $id, string $name, string $email, string $password, string $role, string $phone): void
+    public function update(int $id, string $name, string $email, string $password, string $role, string $phone) 
     {
         $sql = "UPDATE users SET name = :name, email = :email, password = :password, role = :role, phone = :phone WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -110,6 +110,41 @@ class UserController
         $stmt->bindParam(':role', $role);
         $stmt->bindParam(':phone', $phone);
         $stmt->bindParam(':id', $id);
+
+        try {
+            $stmt->execute();
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            die("Exception: " . $e->getMessage());
+        }
+    }
+
+    public function updateProfile(int $id, string $name, string $email, string $role, string $phone): void 
+    {
+        $sql = "UPDATE users SET name = :name, email = :email, role = :role, phone = :phone WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':id', $id);
+
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            die("Exception: " . $e->getMessage());
+        }
+    }
+
+    public function updatePassword(int $id, string $password) {
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+
+        $hashedPassword = md5($password);
+
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(param: ':id', var: $id);
 
         try {
             $stmt->execute();

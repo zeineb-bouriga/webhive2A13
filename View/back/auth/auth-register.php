@@ -1,6 +1,15 @@
 <?php
+session_start();
 
 require_once __DIR__ . '/../../../Controller/UserController.php';
+if (isset( $_SESSION['name']) && isset($_SESSION['email']) && isset($_SESSION['role']) && isset($_SESSION['phone'])) {
+    if ($_SESSION['role'] === 'CLIENT') {
+        header('location: ../../front/index.html');
+    }else {
+        header("location: ../user/index.php");
+    }
+}
+
 
 $error = "";
 

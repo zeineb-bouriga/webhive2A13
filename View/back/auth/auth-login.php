@@ -2,7 +2,12 @@
 
 require_once __DIR__ . '/../../../Controller/UserController.php';
 
+session_start();
+
 $error = "";
+if (isset( $_SESSION['name']) && isset($_SESSION['email']) && isset($_SESSION['role']) && isset($_SESSION['phone'])) {
+    header("location: ../user/index.php");
+}
 
 if (isset($_POST['email']) && isset($_POST['password'])) {
     $email = $_POST['email'];
@@ -15,10 +20,19 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         if (!$user) {
             $error = "User Not Found";
         } else {
-            header("location: ../user/index.php");
+            $_SESSION['name' ] = $user['name'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['phone'] = $user['phone'];
+
+            if (strtolower($user['role']) == 'admin' ||  strtolower($user['role']) == 'farmer'  )
+                header("location: ../user/index.php");
+            else
+                header('location: ../../front/index.html');
         }
     }
 }
+
 
 ?>
 
@@ -102,7 +116,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
                         </a>
                     </div>
                 </div>
-
                 <!-- title-->
                 <h4 class="mt-0">Sign In</h4>
                 <p class="text-muted mb-4">Enter your email address and password to access account.</p>

@@ -1,6 +1,14 @@
 <?php
-
+session_start();
 require_once __DIR__ . '/../../../Controller/UserController.php';
+
+if (!isset($_SESSION['name']) || !isset($_SESSION['email']) || !isset($_SESSION['role']) || !isset($_SESSION['phone'])) {
+    header("location: ../auth/auth-login.php");
+}
+
+if ($_SESSION['role'] === 'CLIENT') {
+    header('location: ../../front/index.html');
+}
 
 $userC = new UserController();
 
@@ -102,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                 <img src="../assets/images/users/user-1.jpg" alt="user-img" title="Mat Helme"
                      class="rounded-circle avatar-md">
                 <div class="dropdown">
-                    <a href="javascript: void(0);" class="dropdown-toggle h5 mb-1 d-block" data-bs-toggle="dropdown">Geneva
+                    <a href="javascript: void(0);" class="dropdown-toggle h5 mb-1 d-block" data-bs-toggle="dropdown"><?= $_SESSION['name'] ?>
                         Kennedy</a>
                     <div class="dropdown-menu user-pro-dropdown">
 
@@ -125,7 +133,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                         </a>
 
                         <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <a href="../auth/logout.php" class="dropdown-item notify-item">
                             <i class="fe-log-out me-1"></i>
                             <span>Logout</span>
                         </a>
@@ -490,7 +498,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                     <li class="dropdown d-none d-md-inline-block">
                         <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none"
                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            <img src="../assets/images/flags/us.jpg" alt="user-image" class="me-0 me-sm-1" height="18">
+                            <img src="../assets/images/flags/tun.jpg" alt="user-image" class="me-0 me-sm-1" height="18">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated">
 
@@ -681,7 +689,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <img src="../assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
                             <span class="ms-1 d-none d-md-inline-block">
-                                        Geneva <i class="mdi mdi-chevron-down"></i>
+                                        <?= $_SESSION['name'] ?> <i class="mdi mdi-chevron-down"></i>
                                     </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -711,7 +719,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                             <div class="dropdown-divider"></div>
 
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="../auth/logout.php" class="dropdown-item notify-item">
                                 <i class="fe-log-out"></i>
                                 <span>Logout</span>
                             </a>
