@@ -50,7 +50,7 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['phone']) &&
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+    <link rel="shortcut icon" href="../assets/images/logoo.ico">
 
     <!-- Theme Config Js -->
     <script src="../assets/js/head.js"></script>

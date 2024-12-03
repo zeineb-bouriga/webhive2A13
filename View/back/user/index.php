@@ -51,13 +51,13 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
 <!-- Mirrored from coderthemes.com/ubold/layouts/default/crm-contacts.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 13 Jul 2024 16:37:05 GMT -->
 <head>
     <meta charset="utf-8"/>
-    <title>CRM Contacts | Ubold - Responsive Bootstrap 5 Admin Dashboard</title>
+    <title>back office Hassad</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
     <meta content="Coderthemes" name="author"/>
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+    <link rel="shortcut icon" href="../assets/images/logoo.ico">
 
     <!-- Theme Config Js -->
     <script src="../assets/js/head.js"></script>
@@ -699,7 +699,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                             </div>
 
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="profile.php"dropdown-item notify-item">
                                 <i class="fe-user"></i>
                                 <span>My Account</span>
                             </a>
@@ -783,7 +783,7 @@ if (isset($_GET['action']) && $_GET['action'] == "update") {
                                                     data-bs-toggle="modal" data-bs-target="#update-modal"><i
                                                         class="mdi mdi-cog"></i></button>
                                             <button type="button" class="btn btn-danger waves-effect waves-light mb-2"
-                                                    data-bs-toggle="modal" data-bs-target="#custom-modal">Add Contact
+                                                    data-bs-toggle="modal" data-bs-target="#custom-modal">Add User
                                             </button>
                                         </div>
                                     </div><!-- end col-->
