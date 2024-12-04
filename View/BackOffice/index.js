@@ -17,4 +17,8 @@ document.getElementById('editForm').addEventListener('submit', function(event) {
         alert("Veuillez entrer un email valide.");
         event.preventDefault(); // Prevent form submission
     }
+    if (!message.length !=0) {
+        alert("Veuillez entrer un message .");
+        event.preventDefault(); // Prevent form submission
+    }
 });

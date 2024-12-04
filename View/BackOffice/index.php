@@ -2,9 +2,8 @@
 include '../../controller/ReclamationController.php';
 $travelOfferC = new ReclamationController();
 $chapters = $travelOfferC->listReclamations();
-$som = $travelOfferC->countreclamation();
+$som = $travelOfferC->countReclamation(); 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +17,7 @@ $som = $travelOfferC->countreclamation();
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <script>src=index.js</script>
+
     <style>
         table {
             width: 100%;
@@ -51,7 +50,7 @@ $som = $travelOfferC->countreclamation();
         }
 
         .delete-btn {
-            background-color: #f44336;
+            background-color: #f44336; /* Red background */
             color: white;
         }
 
@@ -81,13 +80,6 @@ $som = $travelOfferC->countreclamation();
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Reclamation</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#messageModal">
-                    <i class="fas fa-fw fa-comment"></i>
-                    <span>Message</span>
                 </a>
             </li>
 
@@ -124,7 +116,7 @@ $som = $travelOfferC->countreclamation();
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <span class="badge badge-danger badge-counter" id="notificationCount"><?php echo $som; ?></span>
+                                <span class ="badge badge-danger badge-counter" id="notificationCount"><?php echo $som; ?></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notificationsDropdown">
                                 <h6 class="dropdown-header">Notifications</h6>
@@ -151,24 +143,30 @@ $som = $travelOfferC->countreclamation();
                                 <th>Prénom</th>
                                 <th>Email</th>
                                 <th>Reclamation</th>
+                                <th>Message</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($chapters as $chapter): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($chapter['nom']); ?></td>
-                                <td><?php echo htmlspecialchars($chapter['prenom']); ?></td>
-                                <td><?php echo htmlspecialchars($chapter['email']); ?></td>
-                                <td><?php echo isset($chapter['reclamation']) ? htmlspecialchars($chapter['reclamation']) : 'Aucune réclamation'; ?></td>
-                                <td>
-                                    <a href="editreclamation.php?idreclamation=<?php echo $chapter['idreclamation']; ?>" class="edit-btn">Edit</a>
-                                    <a href="delete.php?idreclamation=<?php echo $chapter['idreclamation']; ?>" class="delete-btn">Delete</a>
-                                    <button class="btn btn-info view-messages" data-id="<?php echo $chapter['idreclamation']; ?>" data-toggle="modal" data-target="#messagesModal">Voir Messages</button>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
+                        <?php foreach ($chapters as $chapter): ?>
+<tr>
+    <td><?php echo htmlspecialchars($chapter['nom']); ?></td>
+    <td><?php echo htmlspecialchars($chapter['prenom']); ?></td>
+    <td><?php echo htmlspecialchars($chapter['email']); ?></td>
+    <td><?php echo isset($chapter['reclamation']) ? htmlspecialchars($chapter['reclamation']) : 'Aucune réclamation'; ?></td>
+    <td>
+    <?php 
+    echo $travelOfferC->listMessages($chapter['idreclamation']);
+    ?>
+</td>
+
+    <td>
+        <button class="edit-btn" data-id="<?php echo $chapter['idreclamation']; ?>" data-nom="<?php echo htmlspecialchars($chapter['nom']); ?>" data-prenom="<?php echo htmlspecialchars($chapter['prenom']); ?>" data-email="<?php echo htmlspecialchars($chapter['email']); ?>" data-toggle="modal" data-target="#editModal">Edit</button>
+        <a href="delete.php?idreclamation=<?php echo $chapter['idreclamation']; ?>" class="delete-btn">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
                     </table>
                 </div>
                 <!-- End of Main Content -->
@@ -209,29 +207,35 @@ $som = $travelOfferC->countreclamation();
 
     <!-- Script to handle modal for messages -->
     <script>
-        $(document).ready(function() {
-            $('.view-messages').on('click', function() {
-                var idReclamation = $(this).data('id');
-                $.ajax({
-                    url: 'get_messages.php', // Adjust this URL to your actual endpoint
-                    type: 'GET',
-                    data: { idreclamation: idReclamation },
-                    success: function(data) {
-                        $('#modalMessagesBody').html(data);
-                    }
-                });
-            });
+$('.view-messages').on('click', function() {
+    var idReclamation = $(this).data('id');
+    $.ajax({
+        url: 'get_messages.php', // Make sure this URL points to the correct endpoint
+        type: 'GET',
+        data: { idreclamation: idReclamation },
+        success: function(data) {
+            $('#modalMessagesBody').html(data); // Insert the returned messages into the modal body
+        }
+    });
+});
 
-            // Set the hidden input value for the message modal
-            $('#messageModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var idReclamation = button.data('id'); // Extract info from data-* attributes
-                var modal = $(this);
-                modal.find('#id_reclamation').val(idReclamation);
-            });
-        });
+$('#editModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var idReclamation = button.data('id');
+    var nom = button.data('nom');
+    var prenom = button.data('prenom');
+    var email = button.data('email');
+
+    var modal = $(this);
+    modal.find('#edit_id_reclamation').val(idReclamation);
+    modal.find('#edit_nom').val(nom);
+    modal.find('#edit_prenom').val(prenom);
+    modal.find('#edit_email').val(email);
+});
+
     </script>
 
+ ```html
     <!-- Modal for Messages -->
     <div class="modal fade" id="messagesModal" tabindex="-1" role="dialog" aria-labelledby="messagesModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -278,6 +282,66 @@ $som = $travelOfferC->countreclamation();
             </div>
         </div>
     </div>
+
+    <!-- Modal for Editing Reclamation -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Modifier Réclamation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="update_reclamation.php" method="POST" onsubmit="return validateEditForm()">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit_nom">Nom</label>
+                            <input type="text" class="form-control" id="edit_nom" name="nom" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_prenom">Prénom</label>
+                            <input type="text" class="form-control" id="edit_prenom" name="prenom" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_email">Email</label>
+                            <input type="email" class="form-control" id="edit_email" name="email" required>
+                        </div>
+                        <input type="hidden" name="id_reclamation" id="edit_id_reclamation" value="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateEditForm() {
+            var nom = document.getElementById('edit_nom').value;
+            var prenom = document.getElementById('edit_prenom').value;
+            var email = document.getElementById('edit_email').value;
+
+            if (nom.length > 10) {
+                alert("Le nom ne peut pas dépasser 10 caractères.");
+                return false;
+            }
+
+            if (prenom.length > 10) {
+                alert("Le prénom ne peut pas dépasser 10 caractères.");
+                return false;
+            }
+
+            if (!email.includes('@')) {
+                alert("L'email doit contenir un '@'.");
+                return false;
+            }
+
+            return true; // Form is valid
+        }
+    </script>
 
 </body>
 </html>

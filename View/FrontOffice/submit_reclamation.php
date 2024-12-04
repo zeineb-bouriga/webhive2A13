@@ -2,43 +2,56 @@
 // Include the necessary files
 include '../../controller/ReclamationController.php';
 
-// Initialize an error variable
+// Initialize variables
 $error = "";
-$reclamation = null;
-
-// Create an instance of the ReclamationController
+$successMessage = "";
 $reclamationController = new ReclamationController();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if all required fields are set and not empty
+    // Validate required fields
     if (
-        isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) &&
+        isset($_POST["nom"], $_POST["prenom"], $_POST["email"]) &&
         !empty($_POST["nom"]) && !empty($_POST["prenom"]) && !empty($_POST["email"])
     ) {
-        // Create a new reclamation object
+        // Prepare data for reclamation
         $notify = isset($_POST['notify']) ? true : false;
+        $reason = isset($_POST['reason']) ? $_POST['reason'] : '';
+        $details = isset($_POST['details']) ? $_POST['details'] : '';
+
+        // Create Reclamation object
         $reclamation = new Reclamation(
             null,
             $_POST['nom'],
             $_POST['prenom'],
             $_POST['email'],
-            isset($_POST['reason']) ? $_POST['reason'] : '',
-            isset($_POST['details']) ? $_POST['details'] : '',
+            $reason,
+            $details,
             $notify
         );
 
-        // Add the reclamation to the database
-        if ($reclamationController->addReclamation($reclamation)) {
-            // Successfully added, now display the approval message
-            $successMessage = "Réclamation approuvée!";
+        $idReclamation = $reclamationController->addReclamation($reclamation);
+        
+        if ($idReclamation) {
+            if (isset($_POST['message']) && !empty($_POST['message'])) {
+                $message = new Message(
+                    null,
+                    $idReclamation,
+                    $_POST['message'],
+                    $_POST['nom'] 
+                );
+                $reclamationController->addMessage($message);
+            }
+
+            $successMessage = "Réclamation envoyée avec succès!";
         } else {
-            $error = "Il y a eu une erreur lors de l'envoi de votre réclamation. Veuillez réessayer.";
+            $error = "Une erreur est survenue lors de l'envoi de votre réclamation.";
         }
     } else {
-        $error = "Informations manquantes. Veuillez remplir tous les champs.";
+        $error = "Tous les champs obligatoires doivent être remplis.";
     }
 }
 ?>
+
 
 <!doctype html>
 <html lang="fr">

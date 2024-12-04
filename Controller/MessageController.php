@@ -52,13 +52,13 @@ class MessageController
     }
 
     // Show a specific message by ID
-    public function showMessage($idmessage)
+    public function showMessage($id_rec)
     {
-        $sql = "SELECT * FROM message WHERE idmessage = :idmessage"; // Using idmessage
+        $sql = "SELECT * FROM message WHERE idreclamation = :idmessage"; // Using idmessage
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
-            $query->bindValue(':idmessage', $idmessage);
+            $query->bindValue(':idmessage', $id_rec);
             $query->execute();
 
             $message = $query->fetch();
