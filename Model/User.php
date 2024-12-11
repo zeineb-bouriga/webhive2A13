@@ -11,9 +11,12 @@ class User
     private string $password;
     private string $role;
     private string $phone;
+    private bool $isBanned;
+    private DateTime $banDate;
+    private string $profilePicture;
 
 
-    public function __construct(int $id, string $name, string $email, string $password, string $role, string $phone)
+    public function __construct(int $id, string $name, string $email, string $password, string $role, string $phone, bool $isBanned, DateTime $banDate, string $profilePicture)
     {
         $this->id = $id;
         $this->name = $name;
@@ -21,6 +24,10 @@ class User
         $this->password = $password;
         $this->role = $role;
         $this->phone = $phone;
+        $this->isBanned = $isBanned;
+        $this->banDate = $banDate;
+        $this->profilePicture = $profilePicture;
+
     }
 
     public function getId(): int
@@ -83,5 +90,32 @@ class User
         $this->phone = $phone;
     }
 
+    public function getIsBanned(): bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): void
+    {
+        $this->isBanned = $isBanned;
+    }
+
+    
+    public function getBanDate(): DateTime
+    {
+        return $this->banDate;
+    }
+
+    public function setBanDate(DateTime $banDate): void
+    {
+        $this->banDate = $banDate;
+    }
+    public function setProfilePicture($profilePicture) {
+        $this->profilePicture = $profilePicture;
+    }
+    
+    public function getProfilePicture() {
+        return $this->profilePicture;
+    }
 
 }

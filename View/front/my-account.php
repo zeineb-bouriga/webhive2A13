@@ -13,6 +13,44 @@ $passError = "";
 $isPasswordChanged = false;
 $isProfileUpdated = false; // Flag for profile update success
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profileImage']) && !empty($_FILES['profileImage']['name'])) {
+    $targetDir = "../../uploads/"; 
+    $targetFile = $targetDir . basename($_FILES["profileImage"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // Check if file is an image
+    $check = getimagesize($_FILES["profileImage"]["tmp_name"]);
+    if ($check === false) {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+
+    // Check file size (limit to 2MB)
+    if ($_FILES["profileImage"]["size"] > 2000000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
+        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk === 1) {
+        // Move uploaded file to target directory
+        if (move_uploaded_file($_FILES["profileImage"]["tmp_name"], $targetFile)) {
+            // Update session or database record
+            $_SESSION['profilePicture'] = $_FILES["profileImage"]["name"]; // Update session if storing path
+            $userC->updateProfilePicture($_SESSION['id'], $_FILES["profileImage"]["name"]);
+           // $userC->updateProfilePicture($_SESSION['id'], $targetFile); // Update database if necessary
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
 
 // Vérifiez si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-?>
 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,13 +115,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header class="main-header">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="index.html"><img src="images/logo.png" class="logo" alt=""></a>
+                <a class="navbar-brand" href="index.php"><img src="images/logo.png" class="logo" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
                     <i class="fa fa-bars"></i>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
                         <li class="nav-item"><a class="nav-link active" href="profile.html">My Profile</a></li>
                         <li class="nav-item"><a class="nav-link" href="../back/auth/logout.php">Logout</a></li>
@@ -100,11 +138,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-lg-3 col-md-4">
                 <div class="card">
                     <div class="card-header text-center">
-                        <img src="./images/pff.jpg" class="img-fluid rounded-circle mb-3" alt="User Avatar">
-                        <h4><?= $_SESSION['name'] ?></h4>
-                        <p class="text-muted"><?= $_SESSION['email'] ?></p>
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            <label for="profileImageUpload">
+                                <img src="<?= empty($_SESSION['profilePicture']) ? "images/pff.jpg" : '../../uploads/'.$_SESSION['profilePicture'] ?>" id="profileImage" class="img-fluid rounded-circle mb-3" alt="User Avatar"
+                                    style="cursor: pointer;" title="Click to upload a new profile picture">
+                            </label>
+                            <input type="file" id="profileImageUpload" name="profileImage" accept="image/*" style="display: none;"
+                                onchange="previewImage(event)">
+                            <h4><?= $_SESSION['name'] ?></h4>
+                            <p class="text-muted"><?= $_SESSION['email'] ?></p>
+                            <button type="submit" class="btn btn-primary mt-3">Update Profile Picture</button>
+                        </form>
                     </div>
-                    
+
+
                 </div>
             </div>
 
@@ -131,15 +178,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-group">
                                 <label for="fullName">Full Name</label>
 
-                                <input type="text" id="fullName" name="name" class="form-control" value=<?= $_SESSION['name'] ?>>
+                                <input type="text" id="fullName" name="name" class="form-control" value="<?= $_SESSION['name'] ?>">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" id="email" name="email" class="form-control" value=<?= $_SESSION['email'] ?>>
+                                <input type="email" id="email" name="email" class="form-control" value="<?= $_SESSION['email'] ?>">
                             </div>
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
-                                <input type="text" id="phone" name="phone" role="role" class="form-control" value=<?= $_SESSION['phone'] ?>>
+                                <input type="text" id="phone" name="phone" role="role" class="form-control" value="<?= $_SESSION['phone'] ?>">
                             </div>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </form>
@@ -195,6 +242,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Scripts -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        function previewImage(event) {
+            const image = document.getElementById('profileImage');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    image.src = e.target.result; // Update the image source
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
 </body>
 
 </html>

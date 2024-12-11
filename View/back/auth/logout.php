@@ -9,6 +9,6 @@ session_unset();
 session_destroy();
 
 // Redirige vers la page de connexion (ou autre page)
-header("Location: auth-login.php");
+header(header: "Location: auth-login.php");
 exit;
 ?>

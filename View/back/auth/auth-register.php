@@ -4,7 +4,7 @@ session_start();
 require_once __DIR__ . '/../../../Controller/UserController.php';
 if (isset( $_SESSION['name']) && isset($_SESSION['email']) && isset($_SESSION['role']) && isset($_SESSION['phone'])) {
     if ($_SESSION['role'] === 'CLIENT') {
-        header('location: ../../front/index.html');
+        header('location: ../../front/index.php');
     }else {
         header("location: ../user/index.php");
     }
@@ -104,13 +104,13 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['phone']) &&
                     <!-- Logo -->
                     <div class="auth-brand text-center text-lg-start">
                         <div class="auth-brand">
-                            <a href="index.html" class="logo logo-dark text-center">
+                            <a href="index.php" class="logo logo-dark text-center">
                                 <span class="logo-lg">
                                 <img src="../assets/images/logo.png" alt="" height="100">
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light text-center">
+                            <a href="index.php" class="logo logo-light text-center">
                                 <span class="logo-lg">
                                 <img src="../assets/images/logo.png" alt="" height="100">
                                 </span>
