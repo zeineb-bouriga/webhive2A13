@@ -35,7 +35,7 @@ class ReclamationController
 
     // Add a new reclamation
     public function addReclamation($reclamation) {
-        $sql = "INSERT INTO reclamation (nom, prenom, email) VALUES (:nom, :prenom, :email)";
+        $sql = "INSERT INTO reclamation (nom, prenom, email,image) VALUES (:nom, :prenom, :email,:image)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -43,10 +43,11 @@ class ReclamationController
                 'nom' => $reclamation->getNom(),
                 'prenom' => $reclamation->getPrenom(),
                 'email' => $reclamation->getEmail(),
+                'image' => $reclamation->getimage()
             ]);
-            
-            // Return the ID of the last inserted row
+            var_dump($reclamation->getimage());
             return $db->lastInsertId();
+            
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
             return false; // Return false in case of an error

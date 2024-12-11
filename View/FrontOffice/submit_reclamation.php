@@ -18,15 +18,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $reason = isset($_POST['reason']) ? $_POST['reason'] : '';
         $details = isset($_POST['details']) ? $_POST['details'] : '';
 
+        
+        $imagePath = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+            $uploadDir = '../../uploads/';
+            $imagePath = $uploadDir . basename($_FILES['image']['name']);
+            move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+        }
+
         // Create Reclamation object
         $reclamation = new Reclamation(
             null,
             $_POST['nom'],
             $_POST['prenom'],
             $_POST['email'],
-            $reason,
-            $details,
-            $notify
+            
+            $imagePath
         );
 
         $idReclamation = $reclamationController->addReclamation($reclamation);

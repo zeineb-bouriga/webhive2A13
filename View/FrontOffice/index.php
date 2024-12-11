@@ -92,14 +92,13 @@
     <!-- End Main Top -->
 
     <!-- Start All Title Box -->
-    <div ```html
-    class="all-title-box">
+    <div class="all-title-box">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <h2>Soumettre une Réclamation</h2>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item <a href="#">Home</a></li>
                         <li class="breadcrumb-item active">Reclamation</li>
                     </ul>
                 </div>
@@ -116,7 +115,7 @@
                     <div class="contact-form-right">
                         <h2>GET IN TOUCH</h2>
                         <p>Veuillez remplir le formulaire ci-dessous pour soumettre votre réclamation.</p>
-                        <form id="reclamationForm" action="submit_reclamation.php" method="POST">
+                        <form id="reclamationForm" action="submit_reclamation.php" method="POST" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -140,6 +139,10 @@
                                     <div class="form-group">
                                         <label for="message">Message</label>
                                         <textarea class="form-control" id="message" name="message" rows="4" placeholder="Entrez votre message..." required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        <input class="form-control" id="image" type="file" name="image" accept="image/*" />
                                     </div>
                                     <div class="submit-button text-center">
                                         <button class="btn btn-submit" id="submitButton" type="submit">Envoyer</button>
@@ -275,8 +278,7 @@
     <script src="js/jquery.superslides.min.js"></script>
     <script src="js/bootstrap-select.js"></script>
     <script src="js/inewsticker.js"></script>
-    <script src=" ```html
-    js/bootsnav.js"></script>
+    <script src="js/bootsnav.js"></script ```html
     <script src="js/images-loded.min.js"></script>
     <script src="js/isotope.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>

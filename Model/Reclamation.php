@@ -5,13 +5,15 @@ class Reclamation {
     private ?string $nom; // First name
     private ?string $prenom; // Last name
     private ?string $email; // Email address
+    private ?string $image; // Email address
 
     // Constructor
-    public function __construct(?int $idreclamation, ?string $nom, ?string $prenom, ?string $email) {
+    public function __construct(?int $idreclamation, ?string $nom, ?string $prenom, ?string $email,?string $image) {
         $this->idreclamation = $idreclamation;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->email = $email;
+        $this->image = $image;
     }
 
     // Getters and Setters
@@ -46,6 +48,13 @@ class Reclamation {
 
     public function setEmail(?string $email): void {
         $this->email = $email;
+    }
+    public function getimage(): ?string {
+        return $this->image;
+    }
+
+    public function setimage(?string $email): void {
+        $this->image = $image;
     }
 }
 

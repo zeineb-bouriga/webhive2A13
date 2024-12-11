@@ -1,5 +1,5 @@
 <?php
-class Config {
+class Configg {
     private $host = 'localhost';
     private $db_name = 'your_database_name';
     private $username = 'your_username';

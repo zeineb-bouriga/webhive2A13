@@ -116,7 +116,7 @@ $som = $travelOfferC->countReclamation();
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <span class ="badge badge-danger badge-counter" id="notificationCount"><?php echo $som; ?></span>
+                                <span class="badge badge-danger badge-counter" id="notificationCount"><?php echo $som; ?></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notificationsDropdown">
                                 <h6 class="dropdown-header">Notifications</h6>
@@ -144,6 +144,7 @@ $som = $travelOfferC->countReclamation();
                                 <th>Email</th>
                                 <th>Reclamation</th>
                                 <th>Message</th>
+                                <th>Image</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -158,8 +159,16 @@ $som = $travelOfferC->countReclamation();
     <?php 
     echo $travelOfferC->listMessages($chapter['idreclamation']);
     ?>
-</td>
+    </td>
 
+ <td>
+    <?php if (isset($chapter['image']) && !empty($chapter['image'])): ?>
+        <img src="../../uploads/<?php echo htmlspecialchars(basename($chapter['image'])); ?>" alt="Image" style="width: 100px; height: auto;">
+    <?php else: ?>
+        Aucune image
+    <?php endif; ?>
+</td>    
+    
     <td>
         <button class="edit-btn" data-id="<?php echo $chapter['idreclamation']; ?>" data-nom="<?php echo htmlspecialchars($chapter['nom']); ?>" data-prenom="<?php echo htmlspecialchars($chapter['prenom']); ?>" data-email="<?php echo htmlspecialchars($chapter['email']); ?>" data-toggle="modal" data-target="#editModal">Edit</button>
         <a href="delete.php?idreclamation=<?php echo $chapter['idreclamation']; ?>" class="delete-btn">Delete</a>
@@ -219,7 +228,7 @@ $('.view-messages').on('click', function() {
     });
 });
 
-$('#editModal').on('show.bs.modal', function(event) {
+$('#editModal ').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);
     var idReclamation = button.data('id');
     var nom = button.data('nom');
@@ -235,7 +244,6 @@ $('#editModal').on('show.bs.modal', function(event) {
 
     </script>
 
- ```html
     <!-- Modal for Messages -->
     <div class="modal fade" id="messagesModal" tabindex="-1" role="dialog" aria-labelledby="messagesModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -311,7 +319,7 @@ $('#editModal').on('show.bs.modal', function(event) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                        <button type="submit" class ="btn btn-primary">Mettre à jour</button>
                     </div>
                 </form>
             </div>
@@ -342,6 +350,5 @@ $('#editModal').on('show.bs.modal', function(event) {
             return true; // Form is valid
         }
     </script>
-
 </body>
 </html>
