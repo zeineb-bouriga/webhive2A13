@@ -9,7 +9,7 @@
     display: flex;
 }
 .topic-card .card-body img {
-    width: 400px; /* Fixed size for image */
+    width: 200px; /* Fixed size for image */
     height: auto;
 }
 .topic-card .card-body .topic-details {

@@ -98,6 +98,17 @@ $topics = $topicC->displayTopics("");
                             <input type="hidden" name="topic" value="<?= $topic['id']; ?>">
                             <button type="submit" class="btn btn-danger">Delete</button>
                           </form>
+                          <?php if ($topic['status'] == "active"): ?>
+                            <form action="../../Controller/disable_topic.php" method="POST">
+                              <input type="hidden" name="topic_id" value="<?= $topic['id']; ?>">
+                              <button type="submit" class="btn btn-primary">Deactivate</button>
+                            </form>
+                          <?php else: ?>
+                            <form action="../../Controller/enable_topic.php" method="POST">
+                              <input type="hidden" name="topic_id" value="<?= $topic['id']; ?>">
+                              <button type="submit" class="btn btn-success">Activate</button>
+                            </form>
+                          <?php endif; ?>
                         </td>
                         </td>
                       </tr>

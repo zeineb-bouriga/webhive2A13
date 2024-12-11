@@ -85,35 +85,37 @@ foreach ($topicsData as $topic) {
 <div class="container mt-5">
     <h2 class="mb-4">All Topics</h2>
 
-    <!-- Topic cards container -->
-    <div class="row">
-    <?php foreach ($topics as $topic): ?>
-
-<div class="card topic-card">
-    <div class="card-body">
-        <img src="../Back Office/uploads/<?php echo htmlspecialchars($topic['image']); ?>" alt="Topic Image" class="img-fluid">
-        <div class="topic-details mt-3">
-            <h5 class="card-title"><?php echo htmlspecialchars($topic['topicTitle']); ?></h5>
-            <p class="card-text">
-                <?php echo strlen($topic['topicContent']) > 150 ? htmlspecialchars(substr($topic['topicContent'], 0, 150)) . '...' : htmlspecialchars($topic['topicContent']); ?>
-            </p>
-            <p>
-                <?php foreach ($topic['tags'] as $tag): ?>
-                    <span class="tag"><?php echo htmlspecialchars($tag); ?></span>
-                <?php endforeach; ?>
-            </p>
-            <p><i class="far fa-eye"></i> Views: <?php echo '0'; ?></p>
-            <p><i class="fas fa-arrow-up"></i> Upvotes: <?php echo '0' ; ?></p>
-            <p><i class="far fa-comments"></i> Comments: <?php echo '0'; ?></p>
+    <!-- Search form -->
+    <form id="searchForm" class="mb-3">
+        <div class="form-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search topics">
         </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <!-- Filter by tags -->
+    <div class="form-group">
+        <label for="tagSelect">Filter by Tags:</label>
+        <select id="tagSelect" class="form-control">
+            <option value="">All</option>
+            <!-- Dynamically populate options using JavaScript -->
+        </select>
     </div>
-    <div class="card-footer">
-        <a href="topic.php?id=<?php echo htmlspecialchars($topic['id']); ?>" class="btn btn-primary float-right">Read More</a>
+
+    <!-- Topic cards container -->
+    <div id="topicCards" class="row">
+        <!-- Topics will be dynamically loaded here -->
     </div>
-</div>
-</div>
-<?php endforeach; ?>
-    </div>
+
+    <!-- Pagination links -->
+    <nav id="pagination" aria-label="Topics Pagination" class="d-flex justify-content-center mt-4">
+        <!-- Pagination links will be dynamically loaded here -->
+    </nav>
+
+
+
+
+
 
 
     </div>
@@ -231,8 +233,127 @@ foreach ($topicsData as $topic) {
     <script src="js/form-validator.min.js"></script>
     <script src="js/contact-form-script.js"></script>
     <script src="js/custom.js"></script>
+    <script>
+    // Sample topics data (replace with actual data)
+    const topics = <?php echo json_encode($topics); ?>;
+console.log(topics);
+    // Function to display topics based on current page and search/filter criteria
+    function displayTopics(page = 1, search = '', tag = '') {
+        // Clear previous topics
+        $('#topicCards').empty();
+
+        // Filter topics based on search and tag
+        let filteredTopics = topics.filter(topic => {
+            // Search by title and content
+            const matchSearch = topic.topicTitle.toLowerCase().includes(search.toLowerCase())
+                || topic.topicContent.toLowerCase().includes(search.toLowerCase());
+            // Filter by tag
+            const matchTag = tag === '' || topic.tags.includes(tag);
+            return matchSearch && matchTag;
+        });
+
+        // Paginate the filtered topics
+        const itemsPerPage = 4;
+        const startIndex = (page - 1) * itemsPerPage;
+        const paginatedTopics = filteredTopics.slice(startIndex, startIndex + itemsPerPage);
+
+        // Display paginated topics
+        paginatedTopics.forEach(topic => {
+            const cardHtml = `
+                <div class="card topic-card">
+                    <div class="card-body">
+                        <img src="../Back Office/uploads/${topic.image}" alt="Topic Image">
+                        <div class="topic-details">
+                            <h5 class="card-title">${topic.topicTitle}</h5>
+                            <p class="card-text">${topic.topicContent.length > 150 ? topic.topicContent.slice(0, 150) + '...' : topic.topicContent}</p>
+                            <p>
+                                ${topic.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}
+                            </p>
+                            <p><i class="far fa-eye"></i> Views: ${topic.views}</p>
+                            <p><i class="fas fa-arrow-up"></i> Upvotes: ${topic.likes}</p>
+                            <p><i class="far fa-comments"></i> Comments: ${topic.commentsCount}</p>
+                            <p>Posted ${getTimeElapsed(topic.creationDate)}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="topic.php?id=${topic.id}" class="btn btn-primary float-right">Read More</a>
+                    </div>
+                </div>`;
+            $('#topicCards').append(cardHtml);
+        });
+
+         // Display pagination links
+         displayPagination(page, filteredTopics.length, itemsPerPage);
+    }
+
+    // Function to display pagination links
+    function displayPagination(currentPage, totalItems, itemsPerPage) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        let paginationHtml = '';
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHtml += `
+                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="displayTopics(${i})">${i}</a>
+                </li>`;
+        }
+        $('#pagination').html(`<ul class="pagination">${paginationHtml}</ul>`);
+    }
+
+    // Function to calculate time elapsed since creation date
+    function getTimeElapsed(creationDate) {
+        const now = new Date();
+        const createdAt = new Date(creationDate);
+        const diff = Math.floor((now - createdAt) / (1000 * 60)); // Difference in minutes
+        if (diff < 1) {
+            return 'just now';
+        } else if (diff < 60) {
+            return diff + 'm ago';
+        } else if (diff < 1440) {
+            return Math.floor(diff / 60) + 'h ago';
+        } else {
+            return Math.floor(diff / 1440) + 'd ago';
+        }
+    }
+
+    // Populate tag options
+    function populateTags() {
+        const tags = [...new Set(topics.flatMap(topic => topic.tags))];
+        const tagSelect = $('#tagSelect');
+        tags.forEach(tag => {
+            tagSelect.append(`<option value="${tag}">${tag}</option>`);
+        });
+    }
+    $(document).ready(function () {
+    // Check if topics array is empty
+    if (topics.length === 0) {
+        console.log("Topics array is empty. Check PHP code to ensure data retrieval is successful.");
+        return;
+    }
+
+    // Initial display of topics
+    displayTopics();
+
+    // Populate tag options
+    populateTags();
+
+    // Search form submission
+    $('#searchForm').submit(function (event) {
+        event.preventDefault();
+        const searchInput = $('#searchInput').val();
+        displayTopics(1, searchInput);
+    });
+
+    // Tag filter change
+    $('#tagSelect').change(function () {
+        const selectedTag = $(this).val();
+        displayTopics(1, '', selectedTag);
+    });
+});
+
+
+</script>
 </body>
 
 </html>
-</body>
-</html>
+
+

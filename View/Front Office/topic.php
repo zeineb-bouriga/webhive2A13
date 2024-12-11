@@ -19,6 +19,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     // Get topic details by ID
     $topic = $topicC->getTopicById($topicId);
     // Increment views count for this topic
+    $topicC->incrementViews($topicId);
 } else {
     // Redirect to an error page or homepage if topic ID is not provided
     header("Location: error.php");
@@ -53,6 +54,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comment'])) {
 // Fetch comments for this topic from the database
 $comments = $commentC->getCommentsByTopic($topicId);
 
+// Function to calculate time difference
+function time_elapsed_string($datetime, $full = false)
+{
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = [
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    ];
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full)
+        $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
 
 ?>
 <!DOCTYPE html>
@@ -125,7 +157,7 @@ $comments = $commentC->getCommentsByTopic($topicId);
                     <i class="fas fa-arrow-up" style="color: black;"></i>
                     Upvote
                 </button>
-           
+                <span class="like-count"><?php echo $topic['likes']; ?></span>
             </div>
         </div>
 
@@ -169,6 +201,10 @@ $comments = $commentC->getCommentsByTopic($topicId);
                                         <textarea class="form-control" id="edited-comment-<?php echo $comment['commentID']; ?>"
                                             rows="3"><?php echo $comment['commentContent']; ?></textarea>
                                     </div>
+                                    <small class="text-muted">
+                                        By: <?php echo $comment['author']; ?> •
+                                        <?php echo time_elapsed_string($comment['creationDate']); ?>
+                                    </small>
                                 </div>
                             </div>
                             <?php if ($comment['author'] == $loggedInUserId): ?>
@@ -340,7 +376,107 @@ $comments = $commentC->getCommentsByTopic($topicId);
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-   
+    <script>
+            // Function to toggle between edit and view modes
+            function toggleEditMode(commentId) {
+                // Toggle display for comment content and edit form
+                document.getElementById(`comment-${commentId}-content`).style.display = 'block';
+                document.getElementById(`comment-${commentId}-edit`).style.display = 'none';
+
+                // Toggle display for edit and save buttons
+                document.querySelector(`button.edit-comment-btn[data-comment-id="${commentId}"]`).style.display = 'block';
+                document.querySelector(`button.save-comment-btn[data-comment-id="${commentId}"]`).style.display = 'none';
+                document.querySelector(`button.cancel-comment-btn[data-comment-id="${commentId}"]`).style.display = 'none';
+            }
+
+            // Function to cancel edit mode
+            function cancelEditMode(commentId) {
+                // Toggle display for comment content and edit form
+                document.getElementById(`comment-${commentId}-content`).style.display = 'block';
+                document.getElementById(`comment-${commentId}-edit`).style.display = 'none';
+
+                // Reset the value of the edited comment content to the original content
+                document.getElementById(`edited-comment-${commentId}`).value = '<?php echo $comment['commentContent']; ?>';
+
+                // Toggle display for edit and save buttons
+                document.querySelector(`button.edit-comment-btn[data-comment-id="${commentId}"]`).style.display = 'block';
+                document.querySelector(`button.save-comment-btn[data-comment-id="${commentId}"]`).style.display = 'none';
+                document.querySelector(`button.cancel-comment-btn[data-comment-id="${commentId}"]`).style.display = 'none';
+            }
+
+            // Attach event listeners to edit, save, and cancel buttons
+            document.querySelectorAll('.edit-comment-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    // Toggle edit mode
+                    document.getElementById(`comment-${commentId}-content`).style.display = 'none';
+                    document.getElementById(`comment-${commentId}-edit`).style.display = 'block';
+                    document.querySelector(`button.edit-comment-btn[data-comment-id="${commentId}"]`).style.display = 'none';
+                    document.querySelector(`button.save-comment-btn[data-comment-id="${commentId}"]`).style.display = 'block';
+                    document.querySelector(`button.cancel-comment-btn[data-comment-id="${commentId}"]`).style.display = 'block';
+                });
+            });
+
+            document.querySelectorAll('.save-comment-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    console.log("Save button clicked"); // Add this line to check if the event listener is triggered
+                    const commentId = this.getAttribute('data-comment-id');
+                    const editedComment = document.getElementById(`edited-comment-${commentId}`).value;
+                    console.log("Comment ID:", commentId); // Add this line to check if commentId is retrieved correctly
+                    console.log("Edited comment:", editedComment); // Add this line to check if editedComment is retrieved correctly
+
+                    // Perform AJAX request to update the comment in the database
+                    fetch('../../Controller/update_comment.php', {
+                        method: 'POST',
+                        body: JSON.stringify({ commentId: commentId, editedComment: editedComment }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            // Update the comment content and toggle back to view mode
+                            document.getElementById(`comment-${commentId}-content`).innerHTML = `<p>${editedComment}</p>`;
+                            toggleEditMode(commentId);
+                            // Show the edit button again
+                            document.querySelector(`button.edit-comment-btn[data-comment-id="${commentId}"]`).style.display = 'block';
+                        } else {
+                            // Handle error
+                            console.error('Error:', response.statusText);
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.cancel-comment-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    cancelEditMode(commentId);
+                });
+            });
+        </script>
+        <script>
+            // JavaScript to handle upvote button click
+            document.getElementById('likeBtn').addEventListener('click', function () {
+                // Send AJAX request to increment likes count
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Update the likes count on the page
+                            var likeCountElement = document.querySelector('.like-count');
+                            likeCountElement.textContent = parseInt(likeCountElement.textContent) + 1;
+                        } else {
+                            console.error('Error:', xhr.status);
+                        }
+                    }
+                };
+                xhr.open('POST', '../../Controller/increment_likes.php'); // Replace 'increment_likes.php' with the actual PHP file
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('topicId=<?php echo $topicId; ?>');
+            });
+        </script>
 </body>
 
 </html>

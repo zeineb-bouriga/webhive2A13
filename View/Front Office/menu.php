@@ -83,7 +83,7 @@
                         <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                         <li class="dropdown">
-                            <a href="topics.php" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">Forum</a>
+                            <a href="topics.php" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">Form</a>
                             <ul class="dropdown-menu">
 								<li><a href="addTopic.php">Add Topic</a></li>
 								<li><a href="mytopics.php">My Topics</a></li>

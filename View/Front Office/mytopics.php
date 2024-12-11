@@ -100,7 +100,23 @@ $topics = $topicC->getTopicsByAuthor($authorId); // Assuming a function getTopic
                         <p>
                             <i class="far fa-comments"></i> Comments: <?php echo $topic["commentsCount"]; ?>
                         </p>
-                      
+                        <p>
+                            <?php
+                            // Calculate time elapsed since the topic was posted
+                            $now = new DateTime();
+                            $createdAt = new DateTime($topic["creationDate"]);
+                            $interval = $now->diff($createdAt);
+
+                            // Format the time elapsed
+                            if ($interval->d > 0) {
+                                echo "Posted " . $interval->format("%ad ago");
+                            } elseif ($interval->h > 0) {
+                                echo "Posted " . $interval->format("%hh ago");
+                            } else {
+                                echo "Posted " . $interval->format("%im ago");
+                            }
+                            ?>
+                        </p>
                     </div>
                 </div>
 
@@ -116,16 +132,15 @@ $topics = $topicC->getTopicsByAuthor($authorId); // Assuming a function getTopic
                 </div>
 
             </div>
-            <?php endforeach; ?>
+        <?php endforeach; ?>
     
-    
 
 
 
 
 
 
-          </div>
+        </div>
     </div>
     <!-- End Blog  -->
 

@@ -9,7 +9,10 @@ $error = "";
 
 
 $topicC = new TopicC();
-    $topic = $topicC->getTopicById($_GET["id"]);
+if (isset($_GET["topicid"]) && is_numeric($_GET["topicid"])) {
+    $topicId = intval($_GET["topicid"]);
+    $topics = $topicC->getTopicById($topicId);
+}
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if required fields are set and not empty
@@ -133,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if (!empty($error)) : ?>
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
-            <input type="hidden" name="topicID" value="<?php echo isset($topic) ? $topic['id'] : ''; ?>">
+            <input type="hidden" name="topicID" id="topicid" value="<?php echo isset($topic) ? $topic['id'] : ''; ?>">
             <div class="form-group">
                 <label for="topicTitle">Topic Title</label>
                 <input type="text" class="form-control" id="topicTitle" name="topicTitle" value="<?php echo isset($topic) ? $topic['topicTitle'] : ''; ?>">

@@ -48,12 +48,25 @@ class TopicC
         }
     }
 
-   
+    public function updatestatus($string,$topic)
+    {
+        $sql = "UPDATE topics SET status =:status WHERE id = :id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute([
+                'status' => $string,
+                'id' => $topic
+            ]);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
 
     function displayTopics($check)
     {
         if ($check == "user"){
-            $sql = "SELECT * FROM topics ";
+            $sql = "SELECT * FROM topics WHERE status = 'active'";
         }else {
             $sql = "SELECT * FROM topics";
         }
@@ -87,8 +100,36 @@ class TopicC
         return $topic;
     }
 
-   
-    
+    public function incrementViews($topicId) {
+        $db = config::getConnexion();
+
+        // Prepare SQL statement to update views count
+        $stmt = $db->prepare("UPDATE topics SET views = views + 1 WHERE id = :id");
+
+        // Bind parameters
+        $stmt->bindParam(':id', $topicId);
+
+        // Execute update query
+        $stmt->execute();
+
+        // Close connection
+        $db = null;
+    }
+    public function incrementLikes($topicId) {
+        $db = config::getConnexion();
+
+        // Prepare SQL statement to update likes count
+        $stmt = $db->prepare("UPDATE topics SET likes = likes + 1 WHERE id = :id");
+
+        // Bind parameters
+        $stmt->bindParam(':id', $topicId);
+
+        // Execute update query
+        $stmt->execute();
+
+        // Close connection
+        $db = null;
+    }
 
     public function getTopicsByAuthor($authorId) {
         $db = config::getConnexion();
