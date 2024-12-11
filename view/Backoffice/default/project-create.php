@@ -6,20 +6,19 @@ $error = "";
 $delivery= null;
 $deliveryController = new DeliveryController();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     if (
         isset($_POST["order_id"]) &&
         isset($_POST["delivery_address"]) &&
         isset($_POST["delivery_date"]) &&
-        isset($_POST["delivery_status"]) &&
-        isset($_POST["delivery_agent_id"])
+        isset($_POST["delivery_status"]) 
     ) {
         if (
             !empty($_POST["order_id"]) &&
             !empty($_POST["delivery_address"]) &&
             !empty($_POST["delivery_date"]) &&
-            !empty($_POST["delivery_status"]) &&
-            !empty($_POST["delivery_agent_id"])
+            !empty($_POST["delivery_status"]) 
+        
         ) {
             // Create a new Delivery object
             $delivery = new delivery(
@@ -34,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Add the delivery to the database
             $deliveryController->addDelivery($delivery);
 
+            
+
             // Redirect to the delivery list page
             header('Location:DeliveryList.php');
             
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $error = "Form submission is invalid.";
     }
-}
+
 
 ?>
 <!DOCTYPE html>
@@ -180,6 +181,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="project-create.php" class="menu-link">
+                                            <span class="menu-text">Create Delivey</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery Agents </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryAgentList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="creatAgent.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Locations </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="LocationList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="addLocation.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
 
                         <li class="menu-title">Apps</li>
 

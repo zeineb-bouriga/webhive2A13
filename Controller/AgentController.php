@@ -4,9 +4,9 @@ include(__DIR__ . '/../Model/DeliveryAgent.php');
 
 class DeliveryAgentController
 {
-    public function listAgents()
+    public function listAgents($field,$order)
     {
-        $sql = "SELECT * FROM delivery_agent";
+        $sql = "SELECT * FROM delivery_agent order by $field $order ";
         $db = config::getConnexion();
         try {
             $agents = $db->query($sql);
@@ -100,4 +100,5 @@ class DeliveryAgentController
             die('Error: ' . $e->getMessage());
         }
     }
+
 }

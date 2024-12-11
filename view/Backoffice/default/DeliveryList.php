@@ -1,7 +1,15 @@
 <?php
     include '../../../Controller/DeliveryController.php';
+    $field=$_GET["field"]?? "delivery_date";
+    $order=$_GET["order"]?? "asc";
+    $search=$_GET["search"]??"";
     $deliveryC = new DeliveryController();
-    $list = $deliveryC->listDeliveries();
+    if (empty($search)){
+   
+    $list = $deliveryC->listDeliveries($field,$order); }
+    else{
+        $list=$deliveryC->searchAddress($search);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -134,29 +142,67 @@
                         <li class="menu-item">
                             <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
                                 <span class="menu-icon"><i data-feather="briefcase"></i></span>
-                                <span class="menu-text"> Projects </span>
+                                <span class="menu-text"> Delivery </span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <div class="collapse" id="menuProjects">
                                 <ul class="sub-menu">
                                     <li class="menu-item">
-                                        <a href="project-list.html" class="menu-link">
+                                        <a href="DeliveryList.php" class="menu-link">
                                             <span class="menu-text">List</span>
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="project-detail.html" class="menu-link">
-                                            <span class="menu-text">Detail</span>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item">
                                         <a href="project-create.php" class="menu-link">
-                                            <span class="menu-text">Create Project</span>
+                                            <span class="menu-text">Create Delivey</span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery Agents </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryAgentList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="creatAgent.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Locations </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="LocationList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="addLocation.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
 
 
                         <li class="menu-title">Apps</li>
@@ -521,6 +567,17 @@
                                             <a data-bs-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
                                             <a href="javascript: void(0);" data-bs-toggle="remove"><i class="mdi mdi-close"></i></a>
                                         </div>
+                                        <div class="search-bar mb-3">
+        <form method="GET" action="">
+            <div class="input-group">
+                <input type="text" name="search" id="searchInput" class="form-control"
+                       placeholder="Rechercher par Nom, Email, ou Qualifications"
+                       value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </form>
+    </div>
+
                                         <h4 class="header-title mb-0">Delivery</h4>
 
                                         <div id="cardCollpase4" class="collapse show">
@@ -531,7 +588,7 @@
                                                             <th> Delivery ID </th>
                                                             <th> Order ID </th>
                                                             <th> Delivery Address </th>
-                                                            <th> Delivery Date </th>
+                                                            <th>Delivery Date<a href="?field=delivery_date&order=<?= $order === 'ASC' ? 'DESC' : 'ASC' ?>">Trier</a></th>
                                                             <th> Status </th>
                                                             <th> Delivery Agent ID </th>
                                                             <th colspan="2">Actions</th>

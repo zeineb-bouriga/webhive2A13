@@ -1,7 +1,9 @@
 <?php
     include '../../../Controller/AgentController.php';
+    $field=$_GET["field"]?? "agent_status";
+    $order=$_GET["order"]?? "asc";
     $deliveryAgentC = new DeliveryAgentController();
-    $list = $deliveryAgentC->listAgents();
+    $list = $deliveryAgentC->listAgents($field,$order);
 ?>
 
 <!DOCTYPE html>
@@ -134,29 +136,67 @@
                         <li class="menu-item">
                             <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
                                 <span class="menu-icon"><i data-feather="briefcase"></i></span>
-                                <span class="menu-text"> Projects </span>
+                                <span class="menu-text"> Delivery </span>
                                 <span class="menu-arrow"></span>
                             </a>
                             <div class="collapse" id="menuProjects">
                                 <ul class="sub-menu">
                                     <li class="menu-item">
-                                        <a href="project-list.html" class="menu-link">
+                                        <a href="DeliveryList.php" class="menu-link">
                                             <span class="menu-text">List</span>
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="project-detail.html" class="menu-link">
-                                            <span class="menu-text">Detail</span>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item">
                                         <a href="project-create.php" class="menu-link">
-                                            <span class="menu-text">Create Project</span>
+                                            <span class="menu-text">Create Delivey</span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery Agents </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryAgentList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="creatAgent.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Locations </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="LocationList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="addLocation.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
 
 
                         <li class="menu-title">Apps</li>
@@ -521,7 +561,7 @@
                                             <a data-bs-toggle="collapse" href="#cardCollpase4" role="button" aria-expanded="false" aria-controls="cardCollpase4"><i class="mdi mdi-minus"></i></a>
                                             <a href="javascript: void(0);" data-bs-toggle="remove"><i class="mdi mdi-close"></i></a>
                                         </div>
-                                        <h4 class="header-title mb-0">Delivery</h4>
+                                        <h4 class="header-title mb-0">Delivery Agents</h4>
 
                                         <div id="cardCollpase4" class="collapse show">
                                             <div class="table-responsive pt-3">
@@ -531,7 +571,7 @@
             <th>Agent ID</th>
             <th>Full Name</th>
             <th>Contact Number</th>
-            <th>Availability</th>
+            <th>Availability<a href="?field=agent_status&order=<?= $order === 'ASC' ? 'DESC' : 'ASC' ?>">Trier</a></th>
             <th colspan="2">Actions</th>
         </tr>
     </thead>

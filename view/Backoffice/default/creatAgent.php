@@ -177,6 +177,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="project-create.php" class="menu-link">
+                                            <span class="menu-text">Create Delivey</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Delivery Agents </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="DeliveryAgentList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="creatAgent.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#menuProjects" data-bs-toggle="collapse" class="menu-link">
+                                <span class="menu-icon"><i data-feather="briefcase"></i></span>
+                                <span class="menu-text"> Locations </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="menuProjects">
+                                <ul class="sub-menu">
+                                    <li class="menu-item">
+                                        <a href="LocationList.php" class="menu-link">
+                                            <span class="menu-text">List</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="addLocation.php" class="menu-link">
+                                            <span class="menu-text">Create</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
 
                         <li class="menu-title">Apps</li>
 
@@ -577,7 +641,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-12">
                                 <div class="page-title-box">
                                     
-                                    <h4 class="page-title">Create Delivery</h4>
+                                    <h4 class="page-title">Add Agent</h4>
                                 </div>
                             </div>
                         </div>
@@ -592,36 +656,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
 
             <form method="POST" action="" id="delivery-agent-form">
-                <div class="mb-3">
-                    <label for="full-name" class="form-label">Full Name</label>
-                    <textarea id="full-name" name="full_name" class="form-control" rows="1" 
-                        placeholder="Enter full name" required></textarea>
-                </div>
+    <div class="mb-3">
+        <label for="full-name" class="form-label">Full Name</label>
+        <textarea id="full-name" name="full_name" class="form-control" rows="1" 
+            placeholder="Enter full name" required></textarea>
+        <small id="full-name-error" class="text-danger" style="display: none;">Full name must contain only letters.</small>
+    </div>
 
-                <div class="mb-3">
-                    <label for="contact-number" class="form-label">Contact Number</label>
-                    <textarea id="contact-number" name="contact_number" class="form-control" rows="1" 
-                        placeholder="Enter contact number" required></textarea>
-                    <small id="contact-number-error" class="text-danger" style="display: none;">Contact number must contain only numbers.</small>
-                </div>
+    <div class="mb-3">
+        <label for="contact-number" class="form-label">Contact Number</label>
+        <textarea id="contact-number" name="contact_number" class="form-control" rows="1" 
+            placeholder="Enter contact number" required></textarea>
+        <small id="contact-number-error" class="text-danger" style="display: none;">Contact number must be exactly 8 digits.</small>
+    </div>
 
-                <div class="mb-3">
-                    <label for="agent-status" class="form-label">Availability</label>
-                    <select id="agent-status" name="agent_status" class="form-control" data-toggle="select2" data-width="100%">
-                        <option value="0">Unavailable</option>
-                        <option value="1">Available</option>
-                    </select>
-                </div>
+    <div class="mb-3">
+        <label for="agent-status" class="form-label">Availability</label>
+        <select id="agent-status" name="agent_status" class="form-control" data-toggle="select2" data-width="100%">
+            <option value="0">Unavailable</option>
+            <option value="1">Available</option>
+        </select>
+    </div>
 
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success">Create Delivery Agent</button>
-                    <button type="reset" class="btn btn-light">Cancel</button>
-                </div>
-            </form>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success">Create Delivery Agent</button>
+        <button type="reset" class="btn btn-light">Cancel</button>
+    </div>
+</form>
         </div> <!-- end card-body -->
     </div> <!-- end card-->
 </div> <!-- end col-->
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fullNameInput = document.getElementById("full-name");
+        const contactNumberInput = document.getElementById("contact-number");
+
+        const fullNameError = document.getElementById("full-name-error");
+        const contactNumberError = document.getElementById("contact-number-error");
+
+        // Validation functions
+        const validateFullName = () => {
+            const fullName = fullNameInput.value.trim();
+            if (/^[a-zA-Z\s]+$/.test(fullName)) {
+                fullNameError.style.display = "none";
+            } else {
+                fullNameError.style.display = "block";
+            }
+        };
+
+        const validateContactNumber = () => {
+            const contactNumber = contactNumberInput.value.trim();
+            if (/^\d{8}$/.test(contactNumber)) {
+                contactNumberError.style.display = "none";
+            } else {
+                contactNumberError.style.display = "block";
+            }
+        };
+
+        // Attach event listeners for real-time validation
+        fullNameInput.addEventListener("input", validateFullName);
+        contactNumberInput.addEventListener("input", validateContactNumber);
+
+        // Initial validation to show errors on page load if fields are prefilled
+        validateFullName();
+        validateContactNumber();
+    });
+</script>
 
 <!-- end row-->
 

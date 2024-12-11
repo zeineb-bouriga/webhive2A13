@@ -4,9 +4,9 @@ include(__DIR__ . '/../Model/Delivery.php');
 
 class DeliveryController
 {
-    public function listDeliveries()
+    public function listDeliveries($field,$order)
     {
-        $sql = "SELECT * FROM delivery";
+        $sql = "SELECT * FROM delivery order by $field $order ";
         $db = config::getConnexion();
         try {
             $list = $db->query($sql);
@@ -96,4 +96,24 @@ class DeliveryController
             die('Error: ' . $e->getMessage());
         }
     }
+
+    public function searchAddress($search) {
+        try {
+            $sql = config::getConnexion();
+            $query = "SELECT * 
+                      FROM delivery  
+                      WHERE delivery_address LIKE :search ";
+
+            $stmt = $sql->prepare($query);
+            $searchTerm = '%' . $search . '%';
+            $stmt->bindValue(':search', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error in searchTeacher method: " . $e->getMessage());
+            return [];
+        }
+    }
+
 }
