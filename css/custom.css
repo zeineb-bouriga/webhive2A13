@@ -1,0 +1,28 @@
+/* Cibler les images des produits dans la boutique */
+.shop-box-inner .products-single .box-img-hover img {
+    width: 100%; /* Remplir toute la largeur du conteneur */
+    height: 250px; /* Fixer une hauteur spécifique */
+    object-fit: cover; /* Garder l'image dans son ratio sans la déformer, en la découpant si nécessaire */
+}
+
+/* Optionnel: Réduire la taille pour les petits écrans (mobile) */
+@media (max-width: 768px) {
+    .shop-box-inner .products-single .box-img-hover img {
+        height: 200px; /* Réduire la hauteur pour les petits écrans */
+    }
+}
+/* Cibler les images dans le panier */
+.cart-item img {
+    width: 120px; /* Largeur de l'image dans le panier */
+    height: 120px; /* Hauteur de l'image */
+    object-fit: cover; /* Conserver l'image dans son ratio sans la déformer */
+    margin-right: 15px; /* Ajouter un peu d'espace à droite de l'image */
+}
+
+/* Optionnel: Cibler les petites images sur les petits écrans */
+@media (max-width: 768px) {
+    .cart-item img {
+        width: 80px; /* Réduire la largeur de l'image sur mobile */
+        height: 80px; /* Réduire la hauteur de l'image sur mobile */
+    }
+}

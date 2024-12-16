@@ -1,31 +1,23 @@
 <?php
-class config
-{   private static $pdo = null;
-    public static function getConnexion()
-    {
-        if (!isset(self::$pdo)) {
-            $servername="localhost";
-            $username="root";
-            $password ="";
-            $dbname="webhive";
-            try {
-                self::$pdo = new PDO("mysql:host=$servername;dbname=$dbname",
-                        $username,
-                        $password
-                   
-                );
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-               
-               
-            } catch (Exception $e) {
-                die('Erreur: ' . $e->getMessage());
-            }
-        }
-        return self::$pdo;
-    }
+// Paramètres de connexion à la base de données
+$servername = "localhost"; // Replace with your server host (e.g., localhost)
+$username = "root";        // Replace with your database username
+$password = "";   
+$database = "webhive"; 
+try {
+    // Create a new PDO connection
+    $pdo = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    // Set PDO error mode to exception
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    // Exit the script with an error message if the connection fails
+    die("Database connection failed: " . $e->getMessage());
 }
-config::getConnexion();
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 ?>
-
-
