@@ -16,6 +16,18 @@ class DeliveryController
         }
     }
 
+    public function listDeliveries1()
+    {
+        $sql = "SELECT * FROM delivery  ";
+        $db = config::getConnexion();
+        try {
+            $list = $db->query($sql);
+            return $list;
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+        }
+    }
+
     public function deleteDelivery($delivery_id)
     {
         $sql = "DELETE FROM delivery WHERE delivery_id = :delivery_id";

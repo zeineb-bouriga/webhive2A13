@@ -1,7 +1,7 @@
 <?php
     include '../../../Controller/DeliveryController.php';
     $deliveryC = new DeliveryController();
-    $list = $deliveryC->listDeliveries();
+    $list = $deliveryC->listDeliveries1();
 ?>
 <!DOCTYPE html>
 <html lang="en">
