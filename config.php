@@ -9,12 +9,13 @@ class Config
         if (!isset(self::$pdo)) {
             try {
                 self::$pdo = new PDO(
-                    'mysql:host=localhost;dbname=arbi', // put your database name here
+                    'mysql:host=localhost;dbname=webhive', // put your database name here
                     'root',
                     '',
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC0.
+                        68935+
                     ]
                 );
             } catch (Exception $e) {
